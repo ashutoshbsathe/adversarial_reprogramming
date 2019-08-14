@@ -8,7 +8,7 @@ SAVE_DIR = './saved_models/resnet18/'
 MODEL_NAME = 'resnet18_at_epoch_{}.pt'
 LOSS_NAME = 'loss_log.csv'
 
-ef update_learning_rate(optim, old_lr, new_lr, print_msg=True):
+def update_learning_rate(optim, old_lr, new_lr, print_msg=True):
     if print_msg:
         print('\nReducing learning rate from {} to {}'.format(old_lr, new_lr))
     for g in optim.param_groups:
