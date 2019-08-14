@@ -3,6 +3,7 @@ import torch.nn as nn
 import torchvision
 from models import ResNet18
 import utils
+import os 
 
 SAVE_DIR = './saved_models/resnet18/'
 MODEL_NAME = 'resnet18_at_epoch_{}.pt'
@@ -16,6 +17,8 @@ def update_learning_rate(optim, old_lr, new_lr, print_msg=True):
     return optim 
 
 def main():
+    if not os.path.exists(SAVE_DIR):
+        os.makedirs(SAVE_DIR)
     model = ResNet18().cuda()
     train_loader, val_loader, test_loader = utils.get_cifar10_data_loaders()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-1, momentum=0.9)
