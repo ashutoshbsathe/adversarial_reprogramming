@@ -2,6 +2,10 @@
 # Created by https://www.gitignore.io/api/python,windows,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=python,windows,visualstudiocode
 
+# CIFAR-10 dataset
+cifar10_data/cifar-10-batches-py/
+cifar10_data/cifar-10-python.tar.gz
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
