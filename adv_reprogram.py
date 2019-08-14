@@ -106,6 +106,7 @@ def main():
             reprogrammed.visualize_adversarial_program()
             utils.progress(i+1, len(train_loader), 'Batch [{}/{}] Loss = {} Batch Acc = {}%'.format(i+1, len(train_loader), loss.item(),\
                 ((torch.max(logits, 1)[-1] == labels).sum().item() * 100.0/images.size(0))))
+        reprogrammed.visualize(images)
     correct = 0
     reprogrammed.eval()
     for i, (images, labels) in enumerate(test_loader):
@@ -115,8 +116,7 @@ def main():
         correct += (torch.max(logits, 1)[-1], labels).sum().item()
         utils.progress(i+1, len(test_loader), 'Batch [{}/{}]'.format(i+1, len(test_loader)))
     print('Accuracy on MNIST test set = {}%'.format(float(correct) * 100.0/10000))
-    reprogrammed.visualize(images)
-    reprogrammed.train()
+    print('Done')
 
 
 

@@ -60,6 +60,7 @@ def main():
         correct += (torch.max(logits, 1)[-1] == labels).sum().item()
         utils.progress(j+1, len(test_loader), 'Batch [{}/{}]'.format(j+1, len(test_loader)))
     print('Test Accuracy = {}%'.format(float(correct) * 100.0/N_TEST))
+    print('Done')
 
 
 if __name__ == '__main__':
