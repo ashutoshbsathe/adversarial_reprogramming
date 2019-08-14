@@ -6,6 +6,9 @@
 cifar10_data/cifar-10-batches-py/
 cifar10_data/cifar-10-python.tar.gz
 
+# Saved Models 
+saved_models/resnet18/*
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
