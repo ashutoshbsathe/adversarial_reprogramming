@@ -13,7 +13,7 @@ from datetime import datetime
 # TODO: Remove most of the hard-coded values and make them configurable
 
 SAVE_DIR = './saved_models/reprogram/'
-MODEL_LOAD_PATH = './saved_models/resnet18/resnet_at_epoch_50.pt'
+MODEL_LOAD_PATH = './saved_models/resnet18/resnet_at_epoch_49.pt'
 
 class ReProgramCIFAR10ToMNIST(nn.Module):
     def __init__(self, model, input_size=32, adv_input_size=14, device='cuda'):
