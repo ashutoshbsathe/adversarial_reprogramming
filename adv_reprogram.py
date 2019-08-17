@@ -60,7 +60,10 @@ class ReProgramCIFAR10ToMNIST(nn.Module):
 def main():
     if not os.path.exists(SAVE_DIR):
         os.makedirs(SAVE_DIR)
-    model = ResNet18().to('cuda')
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print('Using PyTorch device : {}'.format(device.upper()))
+
+    model = ResNet18().to(device)
     model_weights = torch.load(MODEL_LOAD_PATH).copy()
     """
     Uncomment following block if you trained a network on newer versions of PyTorch 
@@ -79,12 +82,12 @@ def main():
     _, _, test_loader = utils.get_cifar10_data_loaders()
     correct = 0
     for i, (images, labels) in enumerate(test_loader):
-        images, labels = images.to('cuda'), labels.to('cuda')
+        images, labels = images.to(device), labels.to(device)
         logits = model(images)
         correct += (torch.max(logits, 1)[-1] == labels).sum().item()
         utils.progress(i+1, len(test_loader), 'Batch [{}/{}]'.format(i+1, len(test_loader)))
     print('Accuracy on test set of CIFAR10 = {}%'.format(float(correct) * 100.0/10000))
-    reprogrammed = ReProgramCIFAR10ToMNIST(model)
+    reprogrammed = ReProgramCIFAR10ToMNIST(model, device=device)
     save_tensor = reprogrammed.weight_matrix * reprogrammed.reprogram_weights
     torchvision.utils.save_image(save_tensor.view(1, 3, 32, 32), SAVE_DIR + 'reprogram_init.png')
     train_loader, val_loader, test_loader = utils.get_mnist_data_loaders()
@@ -98,9 +101,9 @@ def main():
     for epoch in range(n_epochs):
         print('Epoch {}'.format(epoch+1))
         for i, (images, labels) in enumerate(train_loader):
-            images, labels = images.to('cuda'), labels.to('cuda')
+            images, labels = images.to(device), labels.to(device)
             logits = reprogrammed(images)
-            logits = logits.to('cuda')
+            logits = logits.to(device)
             optim.zero_grad()
             loss = xent(logits, labels)
             loss.backward()
@@ -112,9 +115,9 @@ def main():
     correct = 0
     reprogrammed.eval()
     for i, (images, labels) in enumerate(test_loader):
-        images, labels = images.to('cuda'), labels.to('cuda')
+        images, labels = images.to(device), labels.to(device)
         logits = reprogrammed(images)
-        logits = logits.to('cuda')
+        logits = logits.to(device)
         correct += (torch.max(logits,1)[-1] == labels).sum().item()
         utils.progress(i+1, len(test_loader), 'Batch [{}/{}]'.format(i+1, len(test_loader)))
     print('Accuracy on MNIST test set = {}%'.format(float(correct) * 100.0/10000))

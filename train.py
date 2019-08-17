@@ -23,7 +23,10 @@ def update_learning_rate(optim, old_lr, new_lr, print_msg=True):
 def main():
     if not os.path.exists(SAVE_DIR):
         os.makedirs(SAVE_DIR)
-    model = ResNet18().cuda()
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print('Using PyTorch device : {}'.format(device.upper()))
+
+    model = ResNet18().to(device)
     train_loader, val_loader, test_loader = utils.get_cifar10_data_loaders(n_train=N_TRAIN, \
         n_val=N_VAL, n_test=N_TEST)
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-1, momentum=0.9)
@@ -37,8 +40,7 @@ def main():
     MODEL_SAVE_PATH = SAVE_DIR + MODEL_NAME
     assert model.training is True
 
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print('Using PyTorch device : {}'.format(device.upper()))
+    
 
     for i in range(n_epochs):
         for j, (images, labels) in enumerate(train_loader):
@@ -59,7 +61,7 @@ def main():
     model.eval()
     correct = 0
     for j, (images, labels) in enumerate(test_loader):
-        images, labels = images.cuda(), labels.cuda() 
+        images, labels = images.to(device), labels.to(device) 
         logits = model(images)
         correct += (torch.max(logits, 1)[-1] == labels).sum().item()
         utils.progress(j+1, len(test_loader), 'Batch [{}/{}]'.format(j+1, len(test_loader)))
