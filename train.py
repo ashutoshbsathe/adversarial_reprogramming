@@ -36,9 +36,13 @@ def main():
     f.close()
     MODEL_SAVE_PATH = SAVE_DIR + MODEL_NAME
     assert model.training is True
+
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print('Using PyTorch device : {}'.format(device.upper()))
+
     for i in range(n_epochs):
         for j, (images, labels) in enumerate(train_loader):
-            images, labels = images.cuda(),labels.cuda()
+            images, labels = images.to(device),labels.to(device)
 
             optimizer.zero_grad()
             outputs = model(images)
