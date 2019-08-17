@@ -13,7 +13,7 @@ from datetime import datetime
 # TODO: Remove most of the hard-coded values and make them configurable
 
 SAVE_DIR = './saved_models/reprogram/'
-MODEL_LOAD_PATH = './saved_models/resnet18/resnet_at_epoch_49.pt'
+MODEL_LOAD_PATH = './saved_models/resnet18/resnet18_at_epoch_49.pt'
 
 class ReProgramCIFAR10ToMNIST(nn.Module):
     def __init__(self, model, input_size=32, adv_input_size=14, device='cuda'):
@@ -48,7 +48,7 @@ class ReProgramCIFAR10ToMNIST(nn.Module):
         return y
     
     def visualize(self, x):
-        time_str = datetime.now().strftime('%Y%m%d_%H:%M:%S')
+        time_str = datetime.now().strftime('%Y%m%d_%H-%M-%S')
         torchvision.utils.save_image(self.weight_matrix * self.reprogram_weights, \
             SAVE_DIR + 'reprogram_weights_{}.png'.format(time_str))
         x = x.repeat(1, 3, 1, 1).to('cpu')
@@ -103,7 +103,7 @@ def main():
             loss = xent(logits, labels)
             loss.backward()
             optim.step()
-            reprogrammed.visualize_adversarial_program()
+            #reprogrammed.visualize_adversarial_program()
             utils.progress(i+1, len(train_loader), 'Batch [{}/{}] Loss = {} Batch Acc = {}%'.format(i+1, len(train_loader), loss.item(),\
                 ((torch.max(logits, 1)[-1] == labels).sum().item() * 100.0/images.size(0))))
         reprogrammed.visualize(images)
@@ -113,7 +113,7 @@ def main():
         images, labels = images.to('cuda'), labels.to('cuda')
         logits = reprogrammed(images)
         logits = logits.to('cuda')
-        correct += (torch.max(logits, 1)[-1], labels).sum().item()
+        correct += (torch.max(logits,1)[-1] == labels).sum().item()
         utils.progress(i+1, len(test_loader), 'Batch [{}/{}]'.format(i+1, len(test_loader)))
     print('Accuracy on MNIST test set = {}%'.format(float(correct) * 100.0/10000))
     print('Done')
