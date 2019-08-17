@@ -58,6 +58,8 @@ class ReProgramCIFAR10ToMNIST(nn.Module):
             SAVE_DIR + 'adversarial_input_{}.png'.format(time_str))
 
 def main():
+    if not os.path.exists(SAVE_DIR):
+        os.makedirs(SAVE_DIR)
     model = ResNet18().to('cuda')
     model_weights = torch.load(MODEL_LOAD_PATH).copy()
     """
