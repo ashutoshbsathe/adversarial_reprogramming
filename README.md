@@ -8,6 +8,10 @@ Code for PyTorch implementation of [adversarial reprogramming](https://arxiv.org
 
 ### Instructions :
 Train a ResNet18 on CIFAR10 using following code 
-> python train.py
+```
+python train.py
+```
 Then reprogram the ResNet18 to classify MNIST digits
-> python adv_reprogram.py
+```
+python adv_reprogram.py
+```
